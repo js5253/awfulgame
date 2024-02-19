@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use rand::Rng;
 use std::ops::Range;
 
-use crate::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}};
+use crate::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}, score::ScoreChange};
 
 const SPAWN_RANGE_X: Range<f32> = -25.0..25.0;
 const SPAWN_RANGE_Z: Range<f32> = 0.0..25.0;
@@ -53,12 +53,13 @@ fn rotate_asteroid(mut query: Query<&mut Transform, With<Asteroid>>, time: Res<T
         transform.rotate_local_z(ROTATE_SPEED * time.delta_seconds())
     }
 }
-fn handle_asteroid_collisions(mut commands: Commands, query: Query<(Entity, &Collider), With<Asteroid>>) {
+fn handle_asteroid_collisions(mut commands: Commands, query: Query<(Entity, &Collider), With<Asteroid>>,     mut score_change_writer: EventWriter<ScoreChange>) {
     for (entity, collider) in query.iter() {
         for &collided_entity in collider.colliding_entries.iter() {
             if query.get(collided_entity).is_ok() {
                 continue
             }
+            score_change_writer.send(ScoreChange::Increment);
             commands.entity(entity).despawn_recursive();
         }
     }

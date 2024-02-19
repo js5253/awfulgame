@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{schedule::InGameSet, score::Score};
+use crate::{schedule::InGameSet, score::Score, spaceship::Spaceship};
 
 
 fn print_position(query: Query<(Entity, &Transform)>) {
@@ -9,13 +9,16 @@ fn print_position(query: Query<(Entity, &Transform)>) {
     }
 }
 fn print_score(score: Res<Score>) {
-    println!("{}", score.value);
+}
+fn debug_camera(query: Query<Spaceship>) {
+
 }
 pub struct DebugPlugin;
 impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
         app
+        .add_systems(Update, debug_camera)
         // .add_systems(Update, print_position.after(InGameSet::EntityUpdates));
-        .add_systems(Update, print_score);
+        // .add_systems(Update, print_score);
     }
 }

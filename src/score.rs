@@ -17,8 +17,8 @@ pub struct ScorePlugin;
 impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<Score>()
-            .add_systems(PostStartup, set_up_score)
-            .add_systems(Update, (increment_score, listen_for_changes));
+            // .add_systems(PostStartup, set_up_score)
+            .add_systems(Update, (listen_for_changes));
     }
 }
 
@@ -33,10 +33,10 @@ fn listen_for_changes(
     mut score_change_reader: EventReader<ScoreChange>,
 ) {
     for event in score_change_reader.read() {
-        println!("{:?}", event);
         score.value += 1;
+        println!("Another point! Now {}", score.value);
     }
 }
 fn increment_score(mut score: ResMut<Score>) {
-    // score.value += 1;
+    score.value += 1;
 }

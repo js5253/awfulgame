@@ -67,7 +67,7 @@ fn spaceship_movement_controls(mut query: Query<(&mut Transform, &mut Velocity),
 fn spaceship_weapon_controls(mut commands: Commands, query: Query<&Transform, With<Spaceship>>, keyboard_input: Res<ButtonInput<KeyCode>>, scene_assets: Res<SceneAssets>, mut score_change_writer: EventWriter<ScoreChange>) {
     let transform = query.single();
     if keyboard_input.pressed(KeyCode::Space) {
-        score_change_writer.send(ScoreChange::Increment);
+        // score_change_writer.send(ScoreChange::Increment);
         commands.spawn((MovingObjectBundle {
             velocity: Velocity::new(-transform.forward() * MISSILE_SPEED),
             acceleration: Acceleration::new(Vec3::ZERO),
