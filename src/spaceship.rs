@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}};
+use crate::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}, score::ScoreChange};
 
 
 const STARTING_TRANSLATION: Vec3 = Vec3::new(0., 0., -20.);
@@ -64,10 +64,10 @@ fn spaceship_movement_controls(mut query: Query<(&mut Transform, &mut Velocity),
     transform.rotate_local_z(roll);
 }
 
-fn spaceship_weapon_controls(mut commands: Commands, query: Query<&Transform, With<Spaceship>>, keyboard_input: Res<ButtonInput<KeyCode>>, scene_assets: Res<SceneAssets>) {
-    
+fn spaceship_weapon_controls(mut commands: Commands, query: Query<&Transform, With<Spaceship>>, keyboard_input: Res<ButtonInput<KeyCode>>, scene_assets: Res<SceneAssets>, mut score_change_writer: EventWriter<ScoreChange>) {
     let transform = query.single();
     if keyboard_input.pressed(KeyCode::Space) {
+        score_change_writer.send(ScoreChange::Increment);
         commands.spawn((MovingObjectBundle {
             velocity: Velocity::new(-transform.forward() * MISSILE_SPEED),
             acceleration: Acceleration::new(Vec3::ZERO),
