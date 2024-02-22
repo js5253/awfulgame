@@ -2,13 +2,14 @@ use bevy::prelude::*;
 use rand::Rng;
 use std::ops::Range;
 
-use crate::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}, score::ScoreChange};
+use crate::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}, player_enemy::PlayerEnemy, score::ScoreChange};
 
 const SPAWN_RANGE_X: Range<f32> = -25.0..25.0;
 const SPAWN_RANGE_Z: Range<f32> = 0.0..25.0;
 const SPAWN_TIME_SECONDS: f32 = 1.;
 const ROTATE_SPEED: f32 = 2.5;
 const RADIUS: f32 = 1.75;
+// add seeking to this
 #[derive(Component, Debug)]
 pub struct Asteroid;
 
@@ -24,6 +25,7 @@ impl Plugin for AsteroidPlugin {
         }).add_systems(Update, (spawn_asteroid, rotate_asteroid, handle_asteroid_collisions));
     }
 }
+
 
 fn spawn_asteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, time: Res<Time>, scene_assets: Res<SceneAssets>) {
     spawn_timer.timer.tick(time.delta());
@@ -46,6 +48,9 @@ fn spawn_asteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, t
             transform: Transform::from_translation(translation),
             ..default()
         }
+    }, PlayerEnemy {
+        max_speed: 300,
+        damage: 20
     }, Asteroid));
 }
 fn rotate_asteroid(mut query: Query<&mut Transform, With<Asteroid>>, time: Res<Time>) {

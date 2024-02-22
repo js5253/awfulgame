@@ -15,7 +15,7 @@ impl Plugin for SchedulePlugin {
             InGameSet::DespawnEntities,
             InGameSet::UserInput,
             InGameSet::EntityUpdates,
-            InGameSet::DespawnEntities
+            InGameSet::CollisionDetection
         )
     .chain(),)
     .add_systems(Update, apply_deferred.after(InGameSet::DespawnEntities).before(InGameSet::UserInput));

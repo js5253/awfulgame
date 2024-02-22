@@ -13,6 +13,8 @@ mod despawn;
 mod schedule;
 mod score;
 mod health;
+mod player_enemy;
+use bevy_inspector_egui::{quick::WorldInspectorPlugin, DefaultInspectorConfigPlugin};
 use despawn::DespawnPlugin;
 use asset_loader::AssetLoaderPlugin;
 use camera::CameraPlugin;
@@ -21,10 +23,12 @@ use debug::DebugPlugin;
 use health::HealthChange;
 use movement::MovementPlugin;
 use asteroids::AsteroidPlugin;
+use player_enemy::PlayerEnemyPlugin;
 use score::{ScoreChange, ScorePlugin};
 use spaceship::SpaceshipPlugin;
 use bevy::prelude::*;
 use ui::UiPlugin;
+use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
 
 fn main() {
     App::new()
@@ -37,6 +41,7 @@ fn main() {
     .add_event::<HealthChange>()
     .add_plugins(UiPlugin)
     .add_plugins(ScorePlugin)
+    .add_plugins(PlayerEnemyPlugin)
     .add_plugins(AssetLoaderPlugin)
     .add_plugins(MovementPlugin)
     .add_plugins(DespawnPlugin)
@@ -45,7 +50,10 @@ fn main() {
     .add_plugins(SpaceshipPlugin)
     .add_plugins(CameraPlugin)
     .add_plugins(DebugPlugin)
-    .add_plugins(DefaultPlugins
+    .add_plugins(FrameTimeDiagnosticsPlugin::default())
+    .add_plugins(DefaultPlugins)
+    .add_plugins(DefaultInspectorConfigPlugin)
+    .add_plugins(WorldInspectorPlugin::new())
     //     .set(a   
     //     WindowPlugin {
     //         primary_window: Some(Window {
@@ -55,7 +63,6 @@ fn main() {
     //         ..default()
     //     }
     // )
-)
     .run();  
 }
 
